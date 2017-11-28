@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'twitter'
+require 'json'
+
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = "........"
+  config.consumer_secret     = ".........."
+  config.access_token        = "............"
+  config.access_token_secret = ".............."
+end
+  
+
+  promotion = {
+    "photo" => "/Users/alexiacarpentier/Desktop/TwitterBot/adidasBF.jpg",
+      "text" => "Promo Adidas : avec le code BLACKFRIDAY, profitez d'une réduction de '30%' sur la sélection Black friday et sur l'Outlet mais aussi de la livraison gratuite !  #adidas #blackfriday #codepromo https://www.adidas.fr/"
+    }
+
+
+client.search("adidas").take(50).each do |tweet|
+  puts "#{tweet.user.screen_name}: #{tweet.text}"
+      users = []
+      users.push(tweet.user.id)
+      puts tweet
+      client.favorite(tweet)
+      client.update_with_media("@#{tweet.user.screen_name} " + promotion["text"], open(promotion["photo"]), {})
+
+end
